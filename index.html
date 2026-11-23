@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sensus Ganoderma v1.2 - APK Ready + KML</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { background: #f1f5f9; color: #1e293b; margin: 0; padding-top: 66px; padding-bottom: 74px; }
+
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: linear-gradient(135deg, #166534, #15803d);
+    color: white; padding: 10px 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: center; }
+  .header-top h1 { font-size: 16px; font-weight: 800; letter-spacing: 0.5px; }
+  .badge-offline { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; font-size: 11px; }
+  .header-sub { display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px; opacity: 0.95; }
+  .di-pill { background: #fef08a; color: #854d0e; font-weight: 800; padding: 1px 8px; border-radius: 6px; }
+
+  main { padding: 12px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .card { background: #ffffff; border-radius: 10px; padding: 14px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
+  .card h2 { font-size: 15px; color: #166534; margin-bottom: 10px; border-bottom: 2px solid #dcfce7; padding-bottom: 6px; }
+  .card h3 { font-size: 13.5px; color: #334155; margin: 10px 0 8px; }
+  .form-group { margin-bottom: 10px; }
+  label { display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+  input[type="text"], input[type="number"], input[type="date"], input[type="month"], select, textarea {
+    width: 100%; padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 14px; background: #fff;
+  }
+  input[readonly] { background: #f8fafc; color: #475569; font-weight: 600; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+
+  .check-item { display: flex; align-items: flex-start; gap: 8px; background: #f8fafc; padding: 8px; border-radius: 7px; border: 1px solid #e2e8f0; margin-bottom: 6px; }
+  .check-item input { margin-top: 3px; width: 16px; height: 16px; accent-color: #15803d; }
+  .check-item span { font-size: 12.5px; line-height: 1.35; }
+
+  .btn { width: 100%; padding: 11px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: block; margin-bottom: 6px; text-align: center; }
+  .btn-primary { background: #15803d; color: white; }
+  .btn-blue { background: #0284c7; color: white; }
+  .btn-wa { background: #16a34a; color: white; }
+  .btn-dark { background: #334155; color: white; }
+  .btn-danger { background: #dc2626; color: white; }
+  .btn-outline { background: white; border: 1.5px solid #15803d; color: #15803d; }
+  .btn-sm { padding: 5px 8px; font-size: 11px; width: auto; display: inline-block; margin: 2px; border-radius: 5px; }
+
+  .sop-box { padding: 10px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-align: center; margin: 10px 0; border: 1.5px dashed #94a3b8; background: #f8fafc; }
+  .sop-merah { background: #fef2f2; border-color: #dc2626; color: #991b1b; }
+  .sop-kuning { background: #fefce8; border-color: #ca8a04; color: #854d0e; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
+  .stat-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; text-align: center; }
+  .stat-val { font-size: 18px; font-weight: 800; color: #1e293b; }
+  .stat-lbl { font-size: 11px; color: #64748b; }
+
+  .photo-preview-wrap { display: none; text-align: center; margin: 8px 0; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; }
+  .photo-preview-wrap img { max-width: 100%; max-height: 200px; border-radius: 6px; margin-bottom: 6px; }
+  .photo-badge { font-size: 11px; color: #166534; font-weight: 600; margin-bottom: 6px; }
+
+  .table-wrap { overflow-x: auto; margin-top: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  th, td { border: 1px solid #e2e8f0; padding: 6px; text-align: left; vertical-align: middle; }
+  th { background: #f1f5f9; font-weight: 700; }
+  .thumb { width: 42px; height: 42px; object-fit: cover; border-radius: 4px; }
+  .tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 10px; color: white; }
+  .tag-merah { background: #dc2626; }
+  .tag-kuning { background: #ca8a04; }
+
+  .hint-text { font-size: 11.5px; color: #166534; font-weight: 600; margin-top: -4px; margin-bottom: 8px; }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    width: 100%;
+    height: 58px;
+    background: #ffffff;
+    border-top: 2px solid #cbd5e1;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .bottom-nav td {
+    padding: 0;
+    border: none;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .nav-link {
+    display: block;
+    width: 100%;
+    height: 56px;
+    line-height: 56px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    border-top: 3px solid transparent;
+    -webkit-tap-highlight-color: rgba(21, 128, 61, 0.2);
+    user-select: none;
+  }
+  .nav-link.active {
+    color: #15803d;
+    border-top-color: #15803d;
+    background: #f0fdf4;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <h1>SENSUS GANODERMA</h1>
+    <span class="badge-offline" id="bridgeBadge">v1.2 APK Ready + KML</span>
+  </div>
+  <div class="header-sub">
+    <span id="hdrInfo">Blok: - | Kalender HP</span>
+    <span>DI Blok: <span class="di-pill" id="hdrDI">0.00%</span></span>
+  </div>
+</header>
+
+<main>
+  <!-- TAB 1: IDENTITAS BLOK -->
+  <section id="tab1" class="tab-content active">
+    <div class="card">
+      <h2>1. Identitas Blok & Sub-Blok Sensus</h2>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Kebun / Estate</label>
+          <input type="text" id="kebun" value="Kebun" placeholder="Nama Kebun">
+        </div>
+        <div class="form-group">
+          <label>Petugas Sensus</label>
+          <input type="text" id="petugas" placeholder="Nama Petugas">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Tanggal Sensus</label>
+          <input type="date" id="tglSensus">
+        </div>
+        <div class="form-group">
+          <label>Periode Bulan</label>
+          <input type="month" id="periodeBulan">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Nama Blok / Field *</label>
+          <input type="text" id="namaBlok" value="PM2012A" oninput="deteksiTahunTanam()">
+        </div>
+        <div class="form-group">
+          <label>Sub-Blok (Dipisah Jalan)</label>
+          <input type="text" id="subBlok" value="Sub-Blok 1">
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Luas (Ha) *</label>
+          <input type="number" id="luasHa" value="30" step="0.01" oninput="hitungTotalPokok()">
+        </div>
+        <div class="form-group">
+          <label>Original SPH</label>
+          <input type="number" id="sph" value="148" oninput="hitungTotalPokok()">
+        </div>
+        <div class="form-group">
+          <label>Pokok Awal *</label>
+          <input type="number" id="totalPokokAwal" value="4440" oninput="hitungDariPokokManual()">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Sudah Disanitasi Sebelumnya (Pokok)</label>
+        <input type="number" id="sanitasiAwal" value="0" oninput="updateHeaderDI()">
+      </div>
+      <div class="form-group">
+        <label>Kelompok Umur Tanaman</label>
+        <select id="kelompokUmur" onchange="evaluasiSOP()">
+          <option value="<=4">≤ 4 Tahun (Tanaman Muda / TBM — Segera Sanitasi & Sisip)</option>
+          <option value="5-7">5 – 7 Tahun (Tanaman Muda — Segera Sanitasi & Panduan Sisip)</option>
+          <option value="8-15" selected>8 – 15 Tahun (TM Produktif — Matriks DI &lt;2%, 3–10%, &gt;10%)</option>
+          <option value=">15">&gt; 15 Tahun (TM Tua — Matriks DI ≤2% dan &gt;2%)</option>
+          <option value="replanting">Akan Replanting (100% Deboling & Pulverisasi)</option>
+          <option value="sulit">Area Sulit Alat Berat (Perlu Persetujuan GM)</option>
+        </select>
+      </div>
+      <div class="hint-text" id="deteksiUmurText">Deteksi otomatis: Tahun Tanam 2012 (Umur 14 Tahun)</div>
+      <button type="button" class="btn btn-primary" onclick="simpanIdentitasBlok()">SIMPAN IDENTITAS BLOK & LANJUT KE SENSUS</button>
+    </div>
+  </section>
+
+  <!-- TAB 2: INPUT SENSUS POKOK -->
+  <section id="tab2" class="tab-content">
+    <div class="card">
+      <h2>2. Input Sensus Pokok, Kamera & GPS</h2>
+      <div class="form-group">
+        <label>Tanggal & Waktu</label>
+        <input type="text" id="waktuInput" readonly>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Nomor Baris *</label>
+          <input type="number" id="noBaris" placeholder="Contoh: 12">
+        </div>
+        <div class="form-group">
+          <label>Nomor Pokok *</label>
+          <input type="number" id="noPokok" placeholder="Contoh: 34">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Latitude</label>
+          <input type="text" id="lat" placeholder="-0.123456">
+        </div>
+        <div class="form-group">
+          <label>Longitude</label>
+          <input type="text" id="lng" placeholder="101.123456">
+        </div>
+      </div>
+      <button type="button" class="btn btn-blue" onclick="ambilGPS()">AMBIL KOORDINAT GPS</button>
+
+      <div class="form-group" style="margin-top:10px;">
+        <label>Dokumentasi Foto Pokok (Kamera HP)</label>
+        <input type="file" id="inputKamera" accept="image/*" capture="environment" style="display:none" onchange="prosesFoto(event)">
+        <button type="button" class="btn btn-outline" onclick="document.getElementById('inputKamera').click()">BUKA KAMERA & AMBIL FOTO POKOK</button>
+        <div class="photo-preview-wrap" id="photoPreviewWrap">
+          <img id="photoPreview" src="" alt="Preview Foto">
+          <div class="photo-badge">Foto siap disimpan (Terkompresi otomatis)</div>
+          <div class="grid-2">
+            <button type="button" class="btn btn-blue btn-sm" style="width:100%" onclick="downloadFotoAktif()">Download Foto</button>
+            <button type="button" class="btn btn-wa btn-sm" style="width:100%" onclick="kirimFotoAktifWA()">Kirim Foto ke WA</button>
+          </div>
+          <button type="button" class="btn btn-danger btn-sm" style="width:100%; margin-top:4px;" onclick="hapusFotoAktif()">Hapus Foto</button>
+        </div>
+      </div>
+
+      <label style="margin-top:8px;">Gejala Wajib Terinfeksi Ganoderma (Minimal 1):</label>
+      <label class="check-item">
+        <input type="checkbox" id="gejalaBadanBuah" onchange="evaluasiSOP()">
+        <span><strong>Badan Buah Jamur Ganoderma</strong> (Muncul pada pangkal batang atau area busuk atas)</span>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="gejalaBusukKering" onchange="evaluasiSOP()">
+        <span><strong>Busuk Kering pada Batang</strong> (Busuk kering pangkal / suara berongga saat diketuk gancu)</span>
+      </label>
+
+      <label style="margin-top:8px;">Gejala Kanopi (Foliar Symptoms):</label>
+      <label class="check-item">
+        <input type="checkbox" id="gejalaTombak" onchange="evaluasiSOP()">
+        <span>Daun Tombak / Pelepah Muda Tidak Membuka</span>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="gejalaSkirting" onchange="evaluasiSOP()">
+        <span>Pelepah Bawah Menggantung (Ganoderma Frond Skirting)</span>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="gejalaKuning" onchange="evaluasiSOP()">
+        <span>Kanopi / Pelepah Muda Kecil, Pendek, Pucat / Menguning</span>
+      </label>
+
+      <div class="grid-2" style="margin-top:8px;">
+        <div class="form-group">
+          <label>Status Produktivitas *</label>
+          <select id="statusProduktivitas" onchange="evaluasiSOP()">
+            <option value="Berbuah">Berbuah</option>
+            <option value="Tidak Berbuah">Tidak Berbuah</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Riwayat Cat Kuning / Sensus</label>
+          <select id="riwayatSensus" onchange="evaluasiSOP()">
+            <option value="Sensus 1">Sensus 1 (Baru Teridentifikasi)</option>
+            <option value="Sensus 2">Sudah Dicat Kuning Sblmnya (Sensus Ke-2)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Catatan Tambahan</label>
+        <input type="text" id="catatan" placeholder="Keterangan lapangan (opsional)">
+      </div>
+
+      <div class="sop-box" id="sopBox">Rekomendasi Tindakan SOP: MENUNGGU GEJALA WAJIB</div>
+
+      <button type="button" class="btn btn-primary" onclick="simpanPokok(false)">SIMPAN POKOK & FOTO TERSENSUS</button>
+      <button type="button" class="btn btn-wa" onclick="simpanPokok(true)">SIMPAN & LANGSUNG KIRIM KE GRUP WHATSAPP</button>
+    </div>
+  </section>
+
+  <!-- TAB 3: REKAP DATA & KML -->
+  <section id="tab3" class="tab-content">
+    <div class="card">
+      <h2>3. Rekap Data, GPS (KML) & Kirim WA</h2>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Mode Tampilan</label>
+          <select id="filterMode" onchange="renderRekap()">
+            <option value="all">Semua Data Tersimpan</option>
+            <option value="date">Harian (Per Tanggal)</option>
+            <option value="month">Bulanan (Per Bulan)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Filter Blok / Field</label>
+          <select id="filterBlok" onchange="renderRekap()">
+            <option value="ALL">Semua Blok / Field</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Pilih Tanggal</label>
+          <input type="date" id="filterTanggal" onchange="renderRekap()">
+        </div>
+        <div class="form-group">
+          <label>Pilih Bulan</label>
+          <input type="month" id="filterBulan" onchange="renderRekap()">
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-val" id="statPokokAwal">4,440</div>
+          <div class="stat-lbl">Total Pokok Awal</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statDI">0.00%</div>
+          <div class="stat-lbl">% DI (Periode)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" style="color:#ca8a04" id="statKuning">0</div>
+          <div class="stat-lbl">Cat Kuning (Periode)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" style="color:#dc2626" id="statMerah">0</div>
+          <div class="stat-lbl">Cat Merah (Periode)</div>
+        </div>
+      </div>
+
+      <h3>Kirim Laporan & GPS ke WhatsApp / File</h3>
+      <button type="button" class="btn btn-wa" onclick="kirimLaporanWA()">Kirim Laporan Teks ke Grup WA</button>
+      <div class="grid-2">
+        <button type="button" class="btn btn-blue" onclick="downloadKML()">Download GPS (KML)</button>
+        <button type="button" class="btn btn-wa" onclick="kirimKMLkeWA()">Kirim File KML ke WA</button>
+      </div>
+      <button type="button" class="btn btn-outline" onclick="salinKodeKML()">Salin Kode KML (Cadangan WebView)</button>
+      <div class="grid-2">
+        <button type="button" class="btn btn-dark" onclick="downloadCSV()">Download CSV (Excel)</button>
+        <button type="button" class="btn btn-wa" onclick="kirimCSVkeWA()">Kirim CSV ke WA</button>
+      </div>
+      <div class="grid-2">
+        <button type="button" class="btn btn-outline" onclick="backupJSON()">Backup JSON</button>
+        <button type="button" class="btn btn-danger" onclick="resetSemuaData()">Reset Semua Data</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Blok & Baris/Pokok</th>
+              <th>Status</th>
+              <th>Koordinat GPS</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabelRekapBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<table class="bottom-nav">
+  <tr>
+    <td><a href="#tab1" class="nav-link active" id="nav1" onclick="switchTab(1); return false;">1. Blok</a></td>
+    <td><a href="#tab2" class="nav-link" id="nav2" onclick="switchTab(2); return false;">2. Sensus &amp; Kamera</a></td>
+    <td><a href="#tab3" class="nav-link" id="nav3" onclick="switchTab(3); return false;">3. Rekap &amp; WA (<span id="navCount">0</span>)</a></td>
+  </tr>
+</table>
+
+<script>
+  var STORAGE_KEY_BLOK = 'gano_blok_v12';
+  var STORAGE_KEY_DATA = 'gano_data_v12';
+  var dataSensus = [];
+  var currentPhotoBase64 = '';
+
+  function switchTab(num) {
+    var tabs = document.querySelectorAll('.tab-content');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].className = 'tab-content';
+    }
+    var links = document.querySelectorAll('.nav-link');
+    for (var j = 0; j < links.length; j++) {
+      links[j].className = 'nav-link';
+    }
+    var targetTab = document.getElementById('tab' + num);
+    var targetNav = document.getElementById('nav' + num);
+    if (targetTab) targetTab.className = 'tab-content active';
+    if (targetNav) targetNav.className = 'nav-link active';
+
+    window.scrollTo(0, 0);
+
+    if (num === 2) {
+      var wInput = document.getElementById('waktuInput');
+      if (wInput) wInput.value = new Date().toLocaleString('id-ID');
+    }
+    if (num === 3) {
+      updateFilterBlokDropdown();
+      renderRekap();
+    }
+  }
+
+  window.addEventListener('hashchange', function() {
+    var h = window.location.hash;
+    if (h === '#tab1') switchTab(1);
+    else if (h === '#tab2') switchTab(2);
+    else if (h === '#tab3') switchTab(3);
+  });
+
+  function hasAndroidBridge() {
+    return typeof window.AndroidBridge !== 'undefined' && window.AndroidBridge !== null;
+  }
+
+  function showToast(msg) {
+    if (hasAndroidBridge() && typeof window.AndroidBridge.showToast === 'function') {
+      window.AndroidBridge.showToast(msg);
+    } else {
+      alert(msg);
+    }
+  }
+
+  function initApp() {
+    var now = new Date();
+    var yyyy = now.getFullYear();
+    var mm = String(now.getMonth() + 1).padStart(2, '0');
+    var dd = String(now.getDate()).padStart(2, '0');
+    var hh = String(now.getHours()).padStart(2, '0');
+    var min = String(now.getMinutes()).padStart(2, '0');
+
+    var tglEl = document.getElementById('tglSensus');
+    var perEl = document.getElementById('periodeBulan');
+    var fTglEl = document.getElementById('filterTanggal');
+    var fBlnEl = document.getElementById('filterBulan');
+    var wktEl = document.getElementById('waktuInput');
+
+    if (tglEl) tglEl.value = yyyy + '-' + mm + '-' + dd;
+    if (perEl) perEl.value = yyyy + '-' + mm;
+    if (fTglEl) fTglEl.value = yyyy + '-' + mm + '-' + dd;
+    if (fBlnEl) fBlnEl.value = yyyy + '-' + mm;
+    if (wktEl) wktEl.value = dd + '/' + mm + '/' + yyyy + ' ' + hh + ':' + min;
+
+    if (hasAndroidBridge()) {
+      var badge = document.getElementById('bridgeBadge');
+      if (badge) badge.innerText = 'v1.2 APK Connected';
+    }
+
+    loadBlok();
+    loadData();
+    deteksiTahunTanam();
+    updateHeaderDI();
+    renderRekap();
+  }
+
+  function deteksiTahunTanam() {
+    var blok = document.getElementById('namaBlok').value.trim();
+    var match = blok.match(/(19|20)\d{2}/);
+    var curYear = new Date().getFullYear();
+    if (match) {
+      var tt = parseInt(match[0], 10);
+      var umur = curYear - tt;
+      document.getElementById('deteksiUmurText').innerText = 'Deteksi otomatis: Tahun Tanam ' + tt + ' (Umur ' + umur + ' Tahun)';
+      var sel = document.getElementById('kelompokUmur');
+      if (umur <= 4) sel.value = '<=4';
+      else if (umur <= 7) sel.value = '5-7';
+      else if (umur <= 15) sel.value = '8-15';
+      else sel.value = '>15';
+    } else {
+      document.getElementById('deteksiUmurText').innerText = 'Deteksi otomatis: Tahun tanam tidak terbaca dari kode blok';
+    }
+    evaluasiSOP();
+  }
+
+  function hitungTotalPokok() {
+    var luas = parseFloat(document.getElementById('luasHa').value) || 0;
+    var sph = parseFloat(document.getElementById('sph').value) || 0;
+    document.getElementById('totalPokokAwal').value = Math.round(luas * sph);
+    updateHeaderDI();
+  }
+
+  function hitungDariPokokManual() {
+    updateHeaderDI();
+  }
+
+  function simpanIdentitasBlok() {
+    try {
+      var blokObj = {
+        kebun: document.getElementById('kebun').value,
+        petugas: document.getElementById('petugas').value,
+        tglSensus: document.getElementById('tglSensus').value,
+        periodeBulan: document.getElementById('periodeBulan').value,
+        namaBlok: document.getElementById('namaBlok').value,
+        subBlok: document.getElementById('subBlok').value,
+        luasHa: document.getElementById('luasHa').value,
+        sph: document.getElementById('sph').value,
+        totalPokokAwal: document.getElementById('totalPokokAwal').value,
+        sanitasiAwal: document.getElementById('sanitasiAwal').value,
+        kelompokUmur: document.getElementById('kelompokUmur').value
+      };
+      localStorage.setItem(STORAGE_KEY_BLOK, JSON.stringify(blokObj));
+    } catch (e) {}
+    updateHeaderDI();
+    switchTab(2);
+  }
+
+  function loadBlok() {
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY_BLOK);
+      if (!saved) return;
+      var b = JSON.parse(saved);
+      if (b.kebun) document.getElementById('kebun').value = b.kebun;
+      if (b.petugas) document.getElementById('petugas').value = b.petugas;
+      if (b.tglSensus) document.getElementById('tglSensus').value = b.tglSensus;
+      if (b.periodeBulan) document.getElementById('periodeBulan').value = b.periodeBulan;
+      if (b.namaBlok) document.getElementById('namaBlok').value = b.namaBlok;
+      if (b.subBlok) document.getElementById('subBlok').value = b.subBlok;
+      if (b.luasHa) document.getElementById('luasHa').value = b.luasHa;
+      if (b.sph) document.getElementById('sph').value = b.sph;
+      if (b.totalPokokAwal) document.getElementById('totalPokokAwal').value = b.totalPokokAwal;
+      if (b.sanitasiAwal) document.getElementById('sanitasiAwal').value = b.sanitasiAwal;
+      if (b.kelompokUmur) document.getElementById('kelompokUmur').value = b.kelompokUmur;
+    } catch (e) {}
+  }
+
+  function loadData() {
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY_DATA);
+      if (saved) dataSensus = JSON.parse(saved) || [];
+    } catch (e) {
+      dataSensus = [];
+    }
+    var navCount = document.getElementById('navCount');
+    if (navCount) navCount.innerText = dataSensus.length;
+  }
+
+  function saveData() {
+    try {
+      localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(dataSensus));
+    } catch (e) {
+      showToast('Memori penuh, segera backup KML/CSV!');
+    }
+    var navCount = document.getElementById('navCount');
+    if (navCount) navCount.innerText = dataSensus.length;
+    updateHeaderDI();
+  }
+
+  function updateHeaderDI() {
+    var blok = document.getElementById('namaBlok').value || '-';
+    var sub = document.getElementById('subBlok').value || '';
+    var tgl = document.getElementById('tglSensus').value || '';
+    var pokokAwal = parseFloat(document.getElementById('totalPokokAwal').value) || 1;
+    var sanitasiAwal = parseFloat(document.getElementById('sanitasiAwal').value) || 0;
+    var terinfeksiBlok = dataSensus.filter(function(d) { return d.namaBlok === blok; }).length;
+    var di = ((sanitasiAwal + terinfeksiBlok) / pokokAwal) * 100;
+
+    document.getElementById('hdrInfo').innerText = 'Blok: ' + blok + ' (' + sub + ') | ' + tgl;
+    document.getElementById('hdrDI').innerText = di.toFixed(2) + '%';
+  }
+
+  function ambilGPS() {
+    if (hasAndroidBridge() && typeof window.AndroidBridge.requestLocation === 'function') {
+      window.AndroidBridge.requestLocation();
+    }
+    if (!navigator.geolocation) {
+      showToast('GPS tidak didukung pada perangkat ini.');
+      return;
+    }
+    showToast('Mengambil koordinat GPS akurat...');
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        document.getElementById('lat').value = pos.coords.latitude.toFixed(6);
+        document.getElementById('lng').value = pos.coords.longitude.toFixed(6);
+        showToast('GPS terkunci (Akurasi: ±' + Math.round(pos.coords.accuracy) + 'm)');
+      },
+      function(err) {
+        showToast('Gagal mengambil GPS: ' + err.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
+  }
+
+  window.onNativeLocationReceived = function(lat, lng) {
+    document.getElementById('lat').value = parseFloat(lat).toFixed(6);
+    document.getElementById('lng').value = parseFloat(lng).toFixed(6);
+  };
+
+  function prosesFoto(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var maxDim = 900;
+        var w = img.width;
+        var h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        var blok = document.getElementById('namaBlok').value || '-';
+        var brs = document.getElementById('noBaris').value || '?';
+        var pkk = document.getElementById('noPokok').value || '?';
+        var lat = document.getElementById('lat').value || '-';
+        var lng = document.getElementById('lng').value || '-';
+        var waktu = document.getElementById('waktuInput').value || '';
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+        ctx.fillRect(0, h - 54, w, 54);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText('Blok: ' + blok + ' | Baris: ' + brs + ' Pokok: ' + pkk, 10, h - 32);
+        ctx.font = '12px sans-serif';
+        ctx.fillText('GPS: ' + lat + ', ' + lng + ' | ' + waktu, 10, h - 12);
+
+        currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.72);
+        document.getElementById('photoPreview').src = currentPhotoBase64;
+        document.getElementById('photoPreviewWrap').style.display = 'block';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function hapusFotoAktif() {
+    currentPhotoBase64 = '';
+    document.getElementById('inputKamera').value = '';
+    document.getElementById('photoPreviewWrap').style.display = 'none';
+  }
+
+  function downloadFotoAktif() {
+    if (!currentPhotoBase64) return showToast('Belum ada foto diambil.');
+    var blok = document.getElementById('namaBlok').value || 'BLOK';
+    var brs = document.getElementById('noBaris').value || '0';
+    var pkk = document.getElementById('noPokok').value || '0';
+    simpanFileBase64('GANO_' + blok + '_B' + brs + '_P' + pkk + '.jpg', currentPhotoBase64, 'image/jpeg');
+  }
+
+  function kirimFotoAktifWA() {
+    if (!currentPhotoBase64) return showToast('Belum ada foto diambil.');
+    var blok = document.getElementById('namaBlok').value || 'BLOK';
+    var brs = document.getElementById('noBaris').value || '0';
+    var pkk = document.getElementById('noPokok').value || '0';
+    var lat = document.getElementById('lat').value || '-';
+    var lng = document.getElementById('lng').value || '-';
+    var sop = document.getElementById('sopBox').innerText;
+    var caption = '*SENSUS GANODERMA*\nBlok: ' + blok + '\nBaris/Pokok: ' + brs + '/' + pkk + '\nGPS: ' + lat + ', ' + lng + '\n' + sop;
+    shareFileBase64KeWA('GANO_' + blok + '_B' + brs + '_P' + pkk + '.jpg', currentPhotoBase64, 'image/jpeg', caption);
+  }
+
+  function evaluasiSOP() {
+    var badanBuah = document.getElementById('gejalaBadanBuah').checked;
+    var busukKering = document.getElementById('gejalaBusukKering').checked;
+    var prod = document.getElementById('statusProduktivitas').value;
+    var riwayat = document.getElementById('riwayatSensus').value;
+    var box = document.getElementById('sopBox');
+
+    if (!badanBuah && !busukKering) {
+      box.className = 'sop-box';
+      box.innerText = 'Rekomendasi Tindakan SOP: MENUNGGU GEJALA WAJIB';
+      return { kodeCat: 'NONE', label: 'MENUNGGU GEJALA WAJIB' };
+    }
+
+    if (prod === 'Tidak Berbuah' || riwayat === 'Sensus 2') {
+      box.className = 'sop-box sop-merah';
+      box.innerText = 'CAT MERAH — SEGERA SANITASI / TUMBANG & DEBOLING';
+      return { kodeCat: 'MERAH', label: 'CAT MERAH (Sanitasi Segera)' };
+    } else {
+      box.className = 'sop-box sop-kuning';
+      box.innerText = 'CAT KUNING — PERTAHANKAN PANEN & PANTAU SENSUS BERIKUTNYA';
+      return { kodeCat: 'KUNING', label: 'CAT KUNING (Pantau Panen)' };
+    }
+  }
+
+  function simpanPokok(kirimLangsungWA) {
+    var noBaris = document.getElementById('noBaris').value.trim();
+    var noPokok = document.getElementById('noPokok').value.trim();
+    if (!noBaris || !noPokok) {
+      return showToast('Nomor Baris dan Nomor Pokok wajib diisi!');
+    }
+
+    var sop = evaluasiSOP();
+    if (sop.kodeCat === 'NONE') {
+      return showToast('Centang minimal 1 Gejala Wajib Ganoderma terlebih dahulu!');
+    }
+
+    var gejalaList = [];
+    if (document.getElementById('gejalaBadanBuah').checked) gejalaList.push('Badan Buah');
+    if (document.getElementById('gejalaBusukKering').checked) gejalaList.push('Busuk Kering');
+    if (document.getElementById('gejalaTombak').checked) gejalaList.push('Daun Tombak');
+    if (document.getElementById('gejalaSkirting').checked) gejalaList.push('Frond Skirting');
+    if (document.getElementById('gejalaKuning').checked) gejalaList.push('Kanopi Menguning');
+
+    var item = {
+      id: Date.now(),
+      kebun: document.getElementById('kebun').value,
+      petugas: document.getElementById('petugas').value,
+      tglSensus: document.getElementById('tglSensus').value,
+      periodeBulan: document.getElementById('periodeBulan').value,
+      waktu: document.getElementById('waktuInput').value,
+      namaBlok: document.getElementById('namaBlok').value,
+      subBlok: document.getElementById('subBlok').value,
+      noBaris: noBaris,
+      noPokok: noPokok,
+      lat: document.getElementById('lat').value || '0',
+      lng: document.getElementById('lng').value || '0',
+      gejala: gejalaList.join(', '),
+      produktivitas: document.getElementById('statusProduktivitas').value,
+      riwayat: document.getElementById('riwayatSensus').value,
+      cat: sop.kodeCat,
+      rekomendasi: sop.label,
+      catatan: document.getElementById('catatan').value,
+      foto: currentPhotoBase64
+    };
+
+    dataSensus.unshift(item);
+    saveData();
+
+    if (kirimLangsungWA) {
+      var pesan = '*LAPORAN POKOK TERINFEKSI GANODERMA*\n' +
+        'Kebun/Blok: ' + item.kebun + ' / ' + item.namaBlok + ' (' + item.subBlok + ')\n' +
+        'Tanggal: ' + item.tglSensus + '\n' +
+        'Baris / Pokok: ' + item.noBaris + ' / ' + item.noPokok + '\n' +
+        'Status Cat: *CAT ' + item.cat + '* (' + item.produktivitas + ')\n' +
+        'Gejala: ' + item.gejala + '\n' +
+        'GPS: https://maps.google.com/?q=' + item.lat + ',' + item.lng + '\n' +
+        'Petugas: ' + (item.petugas || '-');
+
+      if (item.foto) {
+        shareFileBase64KeWA('GANO_' + item.namaBlok + '_B' + item.noBaris + '_P' + item.noPokok + '.jpg', item.foto, 'image/jpeg', pesan);
+      } else {
+        kirimTeksKeWA(pesan);
+      }
+    } else {
+      showToast('Pokok Baris ' + noBaris + ' / Pokok ' + noPokok + ' (' + sop.label + ') berhasil disimpan!');
+    }
+
+    document.getElementById('noPokok').value = '';
+    document.getElementById('gejalaBadanBuah').checked = false;
+    document.getElementById('gejalaBusukKering').checked = false;
+    document.getElementById('gejalaTombak').checked = false;
+    document.getElementById('gejalaSkirting').checked = false;
+    document.getElementById('gejalaKuning').checked = false;
+    document.getElementById('catatan').value = '';
+    hapusFotoAktif();
+    evaluasiSOP();
+  }
+
+  function updateFilterBlokDropdown() {
+    var sel = document.getElementById('filterBlok');
+    var current = sel.value;
+    var bloks = [];
+    for (var i = 0; i < dataSensus.length; i++) {
+      if (bloks.indexOf(dataSensus[i].namaBlok) === -1) {
+        bloks.push(dataSensus[i].namaBlok);
+      }
+    }
+    sel.innerHTML = '<option value="ALL">Semua Blok / Field</option>';
+    for (var j = 0; j < bloks.length; j++) {
+      var opt = document.createElement('option');
+      opt.value = bloks[j];
+      opt.innerText = bloks[j];
+      sel.appendChild(opt);
+    }
+    if (bloks.indexOf(current) !== -1) sel.value = current;
+  }
+
+  function getFilteredData() {
+    var mode = document.getElementById('filterMode').value;
+    var blok = document.getElementById('filterBlok').value;
+    var tgl = document.getElementById('filterTanggal').value;
+    var bln = document.getElementById('filterBulan').value;
+
+    return dataSensus.filter(function(d) {
+      if (blok !== 'ALL' && d.namaBlok !== blok) return false;
+      if (mode === 'date' && d.tglSensus !== tgl) return false;
+      if (mode === 'month' && d.periodeBulan !== bln) return false;
+      return true;
+    });
+  }
+
+  function renderRekap() {
+    var list = getFilteredData();
+    var pokokAwal = parseFloat(document.getElementById('totalPokokAwal').value) || 1;
+    var sanitasiAwal = parseFloat(document.getElementById('sanitasiAwal').value) || 0;
+    var jmlKuning = list.filter(function(d) { return d.cat === 'KUNING'; }).length;
+    var jmlMerah = list.filter(function(d) { return d.cat === 'MERAH'; }).length;
+    var di = ((sanitasiAwal + list.length) / pokokAwal) * 100;
+
+    document.getElementById('statPokokAwal').innerText = pokokAwal.toLocaleString('id-ID');
+    document.getElementById('statDI').innerText = di.toFixed(2) + '%';
+    document.getElementById('statKuning').innerText = jmlKuning;
+    document.getElementById('statMerah').innerText = jmlMerah;
+
+    var tbody = document.getElementById('tabelRekapBody');
+    tbody.innerHTML = '';
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#64748b;">Belum ada data sensus pada filter ini.</td></tr>';
+      return;
+    }
+
+    list.forEach(function(item) {
+      var tr = document.createElement('tr');
+      var imgHtml = item.foto
+        ? '<img src="' + item.foto + '" class="thumb" onclick="shareFotoItem(' + item.id + ')">'
+        : '<span style="color:#94a3b8;font-size:10px;">No Foto</span>';
+      var tagClass = item.cat === 'MERAH' ? 'tag-merah' : 'tag-kuning';
+      tr.innerHTML =
+        '<td>' + imgHtml + '</td>' +
+        '<td><strong>' + item.namaBlok + '</strong><br>B:' + item.noBaris + ' / P:' + item.noPokok + '<br><span style="color:#64748b">' + item.tglSensus + '</span></td>' +
+        '<td><span class="tag ' + tagClass + '">CAT ' + item.cat + '</span><br>' + item.produktivitas + '</td>' +
+        '<td>' + item.lat + ',<br>' + item.lng + '</td>' +
+        '<td>' +
+          (item.foto ? '<button type="button" class="btn btn-wa btn-sm" onclick="shareFotoItem(' + item.id + ')">WA Foto</button>' : '') +
+          '<button type="button" class="btn btn-danger btn-sm" onclick="hapusItem(' + item.id + ')">Hapus</button>' +
+        '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function shareFotoItem(id) {
+    var item = dataSensus.find(function(d) { return d.id === id; });
+    if (!item || !item.foto) return showToast('Foto tidak tersedia.');
+    var pesan = '*DOKUMENTASI GANODERMA*\nBlok: ' + item.namaBlok + ' | Baris: ' + item.noBaris + ' Pokok: ' + item.noPokok + '\nStatus: CAT ' + item.cat + '\nGPS: ' + item.lat + ', ' + item.lng;
+    shareFileBase64KeWA('GANO_' + item.namaBlok + '_B' + item.noBaris + '_P' + item.noPokok + '.jpg', item.foto, 'image/jpeg', pesan);
+  }
+
+  function hapusItem(id) {
+    if (!confirm('Hapus data pokok ini?')) return;
+    dataSensus = dataSensus.filter(function(d) { return d.id !== id; });
+    saveData();
+    renderRekap();
+  }
+
+  function resetSemuaData() {
+    if (!confirm('PERINGATAN: Semua data sensus & foto akan dihapus permanen. Lanjutkan?')) return;
+    dataSensus = [];
+    saveData();
+    renderRekap();
+    showToast('Semua data telah direset.');
+  }
+
+  function generateKMLString() {
+    var list = getFilteredData();
+    var blok = document.getElementById('namaBlok').value || 'Sensus_Ganoderma';
+    var placemarks = '';
+    list.forEach(function(d) {
+      var lat = parseFloat(d.lat);
+      var lng = parseFloat(d.lng);
+      if (!isNaN(lat) && !isNaN(lng) && (lat !== 0 || lng !== 0)) {
+        var styleUrl = d.cat === 'MERAH' ? '#catMerah' : '#catKuning';
+        placemarks += '\n    <Placemark>' +
+          '\n      <name>' + d.namaBlok + ' B' + d.noBaris + '-P' + d.noPokok + ' (' + d.cat + ')</name>' +
+          '\n      <description><![CDATA[<b>Blok:</b> ' + d.namaBlok + ' (' + d.subBlok + ')<br/><b>Baris/Pokok:</b> ' + d.noBaris + ' / ' + d.noPokok + '<br/><b>Status:</b> CAT ' + d.cat + ' - ' + d.produktivitas + '<br/><b>Gejala:</b> ' + d.gejala + '<br/><b>Tanggal:</b> ' + d.tglSensus + ']]></description>' +
+          '\n      <styleUrl>' + styleUrl + '</styleUrl>' +
+          '\n      <Point><coordinates>' + lng + ',' + lat + ',0</coordinates></Point>' +
+          '\n    </Placemark>';
+      }
+    });
+
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<kml xmlns="http://www.opengis.net/kml/2.2">\n' +
+      '  <Document>\n' +
+      '    <name>Sensus Ganoderma - ' + blok + '</name>\n' +
+      '    <Style id="catMerah"><IconStyle><color>ff0000ff</color><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>\n' +
+      '    <Style id="catKuning"><IconStyle><color>ff00ffff</color><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href></Icon></IconStyle></Style>' +
+      placemarks + '\n' +
+      '  </Document>\n' +
+      '</kml>';
+  }
+
+  function generateCSVString() {
+    var list = getFilteredData();
+    var headers = ['Kebun', 'Blok', 'SubBlok', 'Tanggal', 'Baris', 'Pokok', 'Latitude', 'Longitude', 'StatusCat', 'Produktivitas', 'Riwayat', 'Gejala', 'Petugas', 'Catatan'];
+    var rows = list.map(function(d) {
+      return [
+        d.kebun, d.namaBlok, d.subBlok, d.tglSensus, d.noBaris, d.noPokok,
+        d.lat, d.lng, d.cat, d.produktivitas, d.riwayat,
+        '"' + (d.gejala || '').replace(/"/g, '""') + '"',
+        '"' + (d.petugas || '').replace(/"/g, '""') + '"',
+        '"' + (d.catatan || '').replace(/"/g, '""') + '"'
+      ].join(',');
+    });
+    return [headers.join(',')].concat(rows).join('\n');
+  }
+
+  function simpanFileTeks(fileName, content, mimeType) {
+    if (hasAndroidBridge() && typeof window.AndroidBridge.saveTextFile === 'function') {
+      window.AndroidBridge.saveTextFile(fileName, content, mimeType);
+      return;
+    }
+    var blob = new Blob([content], { type: mimeType });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function simpanFileBase64(fileName, base64Data, mimeType) {
+    if (hasAndroidBridge() && typeof window.AndroidBridge.saveBase64File === 'function') {
+      window.AndroidBridge.saveBase64File(fileName, base64Data, mimeType);
+      return;
+    }
+    var a = document.createElement('a');
+    a.href = base64Data;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function shareFileTeksKeWA(fileName, content, mimeType, caption) {
+    if (hasAndroidBridge() && typeof window.AndroidBridge.shareTextFileToWA === 'function') {
+      window.AndroidBridge.shareTextFileToWA(fileName, content, mimeType, caption);
+      return;
+    }
+    simpanFileTeks(fileName, content, mimeType);
+    showToast('File didownload. Silakan lampirkan manual di WhatsApp.');
+    kirimTeksKeWA(caption);
+  }
+
+  function shareFileBase64KeWA(fileName, base64Data, mimeType, caption) {
+    if (hasAndroidBridge() && typeof window.AndroidBridge.shareBase64FileToWA === 'function') {
+      window.AndroidBridge.shareBase64FileToWA(fileName, base64Data, mimeType, caption);
+      return;
+    }
+    simpanFileBase64(fileName, base64Data, mimeType);
+    showToast('Foto didownload. Silakan lampirkan di WhatsApp.');
+    kirimTeksKeWA(caption);
+  }
+
+  function kirimTeksKeWA(pesan) {
+    if (hasAndroidBridge() && typeof window.AndroidBridge.shareTextToWA === 'function') {
+      window.AndroidBridge.shareTextToWA(pesan);
+      return;
+    }
+    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(pesan), '_blank');
+  }
+
+  function kirimLaporanWA() {
+    var list = getFilteredData();
+    var blok = document.getElementById('namaBlok').value || '-';
+    var sub = document.getElementById('subBlok').value || '-';
+    var kebun = document.getElementById('kebun').value || '-';
+    var tgl = document.getElementById('tglSensus').value || '-';
+    var pokokAwal = document.getElementById('totalPokokAwal').value || '0';
+    var di = document.getElementById('statDI').innerText;
+    var kuning = list.filter(function(d) { return d.cat === 'KUNING'; }).length;
+    var merah = list.filter(function(d) { return d.cat === 'MERAH'; }).length;
+
+    var rincian = '';
+    list.slice(0, 25).forEach(function(d, idx) {
+      rincian += (idx + 1) + '. B:' + d.noBaris + '/P:' + d.noPokok + ' [CAT ' + d.cat + '] (' + d.lat + ',' + d.lng + ')\n';
+    });
+    if (list.length > 25) rincian += '...dan ' + (list.length - 25) + ' pokok lainnya.\n';
+
+    var pesan = '*REKAP SENSUS GANODERMA*\n' +
+      'Kebun: ' + kebun + '\n' +
+      'Blok: ' + blok + ' (' + sub + ')\n' +
+      'Tanggal: ' + tgl + '\n' +
+      'Pokok Awal: ' + pokokAwal + '\n' +
+      'Total Terinfeksi: ' + list.length + ' Pokok (DI: ' + di + ')\n' +
+      '- Cat Merah: ' + merah + ' Pokok\n' +
+      '- Cat Kuning: ' + kuning + ' Pokok\n\n' +
+      '*Detail Pokok:*\n' + (rincian || '-');
+
+    kirimTeksKeWA(pesan);
+  }
+
+  function downloadKML() {
+    var list = getFilteredData();
+    if (list.length === 0) return showToast('Tidak ada data untuk diekspor ke KML.');
+    var blok = document.getElementById('namaBlok').value || 'BLOK';
+    var tgl = document.getElementById('tglSensus').value || 'DATE';
+    simpanFileTeks('GANODERMA_' + blok + '_' + tgl + '.kml', generateKMLString(), 'application/vnd.google-earth.kml+xml');
+  }
+
+  function kirimKMLkeWA() {
+    var list = getFilteredData();
+    if (list.length === 0) return showToast('Tidak ada data untuk dikirim ke KML.');
+    var blok = document.getElementById('namaBlok').value || 'BLOK';
+    var tgl = document.getElementById('tglSensus').value || 'DATE';
+    var caption = '*FILE GPS KML SENSUS GANODERMA*\nBlok: ' + blok + '\nTanggal: ' + tgl + '\nTotal Titik: ' + list.length + ' Pokok';
+    shareFileTeksKeWA('GANODERMA_' + blok + '_' + tgl + '.kml', generateKMLString(), 'application/vnd.google-earth.kml+xml', caption);
+  }
+
+  function salinKodeKML() {
+    var kml = generateKMLString();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(kml).then(function() { showToast('Kode KML berhasil disalin ke clipboard!'); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = kml;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Kode KML berhasil disalin!');
+    }
+  }
+
+  function downloadCSV() {
+    var list = getFilteredData();
+    if (list.length === 0) return showToast('Tidak ada data untuk diekspor ke CSV.');
+    var blok = document.getElementById('namaBlok').value || 'BLOK';
+    var tgl = document.getElementById('tglSensus').value || 'DATE';
+    simpanFileTeks('GANODERMA_' + blok + '_' + tgl + '.csv', generateCSVString(), 'text/csv');
+  }
+
+  function kirimCSVkeWA() {
+    var list = getFilteredData();
+    if (list.length === 0) return showToast('Tidak ada data untuk dikirim.');
+    var blok = document.getElementById('namaBlok').value || 'BLOK';
+    var tgl = document.getElementById('tglSensus').value || 'DATE';
+    var caption = '*DATA CSV EXCEL SENSUS GANODERMA*\nBlok: ' + blok + '\nTanggal: ' + tgl + '\nTotal Data: ' + list.length + ' Pokok';
+    shareFileTeksKeWA('GANODERMA_' + blok + '_' + tgl + '.csv', generateCSVString(), 'text/csv', caption);
+  }
+
+  function backupJSON() {
+    var blok = document.getElementById('namaBlok').value || 'BLOK';
+    var tgl = document.getElementById('tglSensus').value || 'DATE';
+    simpanFileTeks('BACKUP_GANODERMA_' + blok + '_' + tgl + '.json', JSON.stringify(dataSensus, null, 2), 'application/json');
+  }
+
+  initApp();
+</script>
+</body>
+</html>
